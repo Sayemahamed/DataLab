@@ -7,18 +7,18 @@ async def main():
             endpoint_url="http://localhost:9222/", timeout=5000
         )
         page: Page = browser.contexts[0].pages[1]
-        await page.goto(url="https://www.glassdoor.com/Reviews/index.htm")
-        await page.wait_for_timeout(timeout=5000)
-        search_box = page.locator('[aria-label="Search for a company"]')
-        await search_box.click()  
-        await search_box.fill("Microsoft")  
-        await search_box.press("Enter")
-        await page.wait_for_timeout(timeout=5000)
-        box =page.locator('[data-test="company-card"]').first
-        await box.click()
-        await page.wait_for_timeout(timeout=5000)
-        await page.locator('#reviews').click()
-        await page.wait_for_timeout(timeout=5000)
+        # await page.goto(url="https://www.glassdoor.com/Reviews/index.htm")
+        # await page.wait_for_timeout(timeout=5000)
+        # search_box = page.locator('[aria-label="Search for a company"]')
+        # await search_box.click()  
+        # await search_box.fill("Microsoft")  
+        # await search_box.press("Enter")
+        # await page.wait_for_timeout(timeout=5000)
+        # box =page.locator('[data-test="company-card"]').first
+        # await box.click()
+        # await page.wait_for_timeout(timeout=5000)
+        # await page.locator('#reviews').click()
+        # await page.wait_for_timeout(timeout=5000)
         loop:bool =True
         while loop:
             await page.evaluate("window.scrollTo(0, document.body.scrollHeight);")
@@ -29,7 +29,15 @@ async def main():
                 try:
                     button = buttons.nth(i)
                     await button.click(timeout=5000)
-                    await page.locator('[data-test="review-subratings-caret-tooltip"]').click()
+                    input("Enter to continue")
+                    rating_button = page.locator('[data-test="review-rating-label"]').nth(i)
+                    print(await rating_button.bounding_box())
+                    await rating_button.click(timeout=5000)
+                    
+                    subrating_tooltip = page.locator('[data-test="review-subratings-tooltip"]')
+                    print(await subrating_tooltip.inner_html())
+                    
+
                     await page.wait_for_timeout(timeout=5000)
                     print(await containers.nth(i).inner_text())
                 except Exception:
